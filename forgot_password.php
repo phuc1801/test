@@ -1,35 +1,27 @@
 <?php 
     if(isset($_POST['doimk'])){
         $username = htmlspecialchars(trim($_POST['username']));
-        $newpass = htmlspecialchars($_POST['newpass']);
-        $confirmPass = htmlspecialchars($_POST['confirmPass']);
-
-        // Kiểm tra xem mật khẩu nhập lại có khớp không
-        if($newpass !== $confirmPass){
-            echo '<div class="alert alert-danger" role="alert">Mật khẩu nhập lại không khớp</div>';
-           
+        $newpassword = htmlspecialchars($_POST['newpass']);
+        $confrimpassword = htmlspecialchars($_POST['confirmPass']);
+        if($newpassword !== $confrimpassword){
+            echo '<div class="alert alert-danger" role="alert">Nhập lại mật khẩu không hớp</div>';
         }else{
-            // Include file kết nối đến database
+           
             include('connect.php');
-
-            // Chuẩn bị và thực thi câu lệnh SQL
             $updateSql = "UPDATE user SET matkhau = :password WHERE username = :username";
             $stmt = $conn->prepare($updateSql);
-            $stmt->bindParam(':password', $newpass, PDO::PARAM_STR);
+            $stmt->bindParam(':password', $newpassword, PDO::PARAM_STR);
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
             $stmt->execute();
-
-            // Kiểm tra và hiển thị thông báo
-            $rowCount = $stmt->rowCount();
-            if ($rowCount > 0) {
-                echo '<div class="alert alert-success" role="alert">Đổi mật khẩu thành công!</div>';
-            } else {
+            $row = $stmt->rowCount();
+            if($row > 0){
+                echo '<div class="alert alert-success" role="alert">Đổi mật khẩu thành công</div>';
+            }else{
                 echo '<div class="alert alert-danger" role="alert">Đổi mật khẩu thất bại. Tài khoản không tồn tại!</div>';
             }
         }
-
-        
     }
+
 ?>
 
 <!DOCTYPE html>

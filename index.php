@@ -7,8 +7,6 @@ if (!isset($_SESSION['username'])) {
 ?>
 
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,7 +26,7 @@ if (!isset($_SESSION['username'])) {
         <div class="container">
             <ul class="nav">
                 <li class="nav-item"><a href="" class="nav-link">Trang chủ</a></li>
-                <li class="nav-item"><a href="" class="nav-link">Danh sách bán hàng</a></li>
+                <li class="nav-item"><a href="add.php" class="nav-link">Danh sách bán hàng</a></li>
                 <li class="nav-item"><a href="logout.php" class="nav-link">Đăng xuất</a></li>
             </ul>
         </div>
