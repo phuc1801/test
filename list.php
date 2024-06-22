@@ -1,59 +1,54 @@
 <?php
+include('connect.php');
 session_start();
 if (!isset($_SESSION['username'])) {
     header('Location: login.php');
     exit();
 }
-
-include('connect.php');
-
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
+if(isset($_POST['search'])){
     $khachhang_id = htmlspecialchars($_POST['khachhang_id']);
-    $sql = "SELECT * FROM `donhang` WHERE khachhang_id = :khachhang_id";
+    $sql = "SELECT * FROM donhang WHERE khachhang_id = :khachhang_id";
     $stmt = $conn->prepare($sql);
     $stmt->execute([':khachhang_id' => $khachhang_id]);
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} else {
-    $sql = "SELECT * FROM `donhang`";
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}else{
+    $sql = "SELECT * FROM donhang";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 ?>
 
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>QUẢN LÝ VẬN ĐƠN</title>
-    <script type="text/javascript" src="./assets/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="./assets/css/bootstrap.min.css">
-	<link rel="stylesheet" href="./assets/css/main.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/css/main.css">
+    <title>Document</title>
 </head>
 <body>
-    <header><center>QUẢN LÝ VẬN ĐƠN</center></header>
+    <header class="text-center">QUẢN LÝ BÁN HÀNG
+        <br>
+        <img class="image" src="./assets/img/images.jpg" alt="">
+    </header>
     <content>
-        <div class="container"> 
+        <div class="container">
             <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php">Trang chủ</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="list.php">Danh sách vận đơn</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="logout.php">Đăng xuất</a>
-                </li>
+                <li class="nav-item"><a href="" class="nav-link">Trang chủ</a></li>
+                <li class="nav-item"><a href="list.php" class="nav-link">Danh sách bán hàng</a></li>
+                <li class="nav-item"><a href="logout.php" class="nav-link">Đăng xuất</a></li>
             </ul>
-            <br>
-            <form method="post">
-                <label>TÌM KIẾM THEO NHÂN VIÊN PHỤ TRÁCH</label>
-                <input type="text" name="khachhang_id" placeholder="Nhập mã Nhân viên" style="width: 300px; padding: 3px; ">
-                <button type="submit" name="submit" class="btn btn-primary">Tìm kiếm</button>
-                <a href="add.php" class="btn btn-success">Thêm</a>
+            <form action="" method="post" class="mt-3">
+                <label for="nhanvien_id">Nhập mã khách hàng</label>
+                <input type="text" style="width: 300px; padding: 3px;" name="khachhang_id">
+                <button name ="search" class="btn bg-primary">Tìm kiếm</button>
+                <a href="add.php" class="btn bg-warning">Thêm</a>
             </form>
-            <br>
-            <table class="table table-inverse">
+            <table class="table mt-3">
                 <thead>
                     <tr>
                         <th>Mã đơn hàng</th>
@@ -63,29 +58,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                         <th>Ngày bán</th>
                         <th>Ngày giao hàng</th>
                         <th>Ghi chú</th>
-                
+                        <th>Trạng thái</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($result as $items): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($items['id']); ?></td>
-                        <td><?php echo htmlspecialchars($items['khachhang_id']); ?></td>
-                        <td><?php echo htmlspecialchars($items['trangthai']); ?></td>
-                        <td><?php echo htmlspecialchars($items['khuyenmai']); ?></td>
-                        <td><?php echo htmlspecialchars($items['ngayban']); ?></td>
-                        <td><?php echo htmlspecialchars($items['ngaygiaohang']); ?></td>
-                        <td><?php echo htmlspecialchars($items['ghichu']); ?></td>
-                        <td>
-                            <a href="edit.php?id=<?php echo $items['id']; ?>" class="btn btn-warning">Sửa</a>
-                            <a href="delete.php?id=<?php echo $items['id']; ?>" class="btn btn-danger" style="margin-top: 2px;">Xóa</a>
-                        </td>
-                    </tr>
+                    <?php foreach($rows as $row): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($row['id']); ?></td>
+                            <td><?php echo htmlspecialchars($row['khachhang_id']); ?></td>
+                            <td><?php echo htmlspecialchars($row['trangthai']); ?></td>
+                            <td><?php echo htmlspecialchars($row['khuyenmai']); ?></td>
+                            <td><?php echo htmlspecialchars($row['ngayban']); ?></td>
+                            <td><?php echo htmlspecialchars($row['ngaygiaohang']); ?></td>
+                            <td><?php echo htmlspecialchars($row['ghichu']); ?></td>
+                            <td>
+                                <a href="edit.php?id=<?php echo $row['id']; ?>" class="btn bg-warning">Sửa</a>
+                                <a href="delete.php?id=<?php echo $row['id']; ?>" class="btn bg-danger">Xoá</a>
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
     </content>
-    <footer><center>Nguyễn Duy Phúc - 90606</center></footer>
+    <footer>
+        <p>Tên người dùng: <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : 'Không có người dùng'; ?></p>   
+        <br>    
+        90606 - Nguyễn Duy Phúc - N02  
+    </footer>
+    
 </body>
 </html>
