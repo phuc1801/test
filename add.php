@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     ];
 
     if ($stmt->execute($params)) {
-        header('Location: list.php');
+        header('Location: index.php');
         exit();
     } else {
         $error = "Thêm vận đơn thất bại, vui lòng thử lại!";
